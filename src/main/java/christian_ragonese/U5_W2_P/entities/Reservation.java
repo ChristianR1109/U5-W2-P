@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
@@ -17,7 +18,7 @@ public class Reservation {
     @GeneratedValue
     private UUID id;
     @Column(name = "reservation_date")
-    private String reservationDate;
+    private LocalDate reservationDate;
     private String note;
 
     @ManyToOne

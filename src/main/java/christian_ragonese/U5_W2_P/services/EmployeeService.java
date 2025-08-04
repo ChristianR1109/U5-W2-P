@@ -5,6 +5,8 @@ import christian_ragonese.U5_W2_P.exceptions.BadRequestException;
 import christian_ragonese.U5_W2_P.exceptions.NotFoundException;
 import christian_ragonese.U5_W2_P.payloads.NewEmployeeDTO;
 import christian_ragonese.U5_W2_P.repositories.EmployeeRepository;
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -12,7 +14,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -20,6 +24,9 @@ import java.util.UUID;
 public class EmployeeService {
     @Autowired
     private EmployeeRepository employeeRepository;
+
+    @Autowired
+    private Cloudinary imgUploader;
 
 
     //------------------------SAVE--------------------------------------
@@ -78,4 +85,21 @@ public class EmployeeService {
         Employee found = this.findById(employeeID);
         this.employeeRepository.delete(found);
     }
+
+    //---------------------UPLOAD AVATAR----------------------------------------
+
+    public Employee uploadAvatar(MultipartFile file, UUID employeeId) {
+        try {
+            Employee found = this.findById(employeeId);
+
+            Map result = imgUploader.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
+            String imgUrl = (String) result.get("url");
+
+            found.setAvatar(imgUrl);
+            return employeeRepository.save(found);
+        } catch (Exception ex) {
+            throw new BadRequestException("Problemi con il file");
+        }
+    }
+
 }
