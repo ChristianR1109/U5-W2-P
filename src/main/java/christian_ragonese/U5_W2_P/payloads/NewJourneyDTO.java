@@ -8,7 +8,7 @@ public record NewJourneyDTO(
         @Size(min = 2, max = 50, message = "La destinazione deve essere compresa tra 2 e  50 caratteri!")
         String destination,
         @NotEmpty(message = "La data è obbligatoria!")
-        @Size(min = 2, max = 30, message = "La data deve essere compresa tra 2 e 30 caratteri!")
+        @Size(min = 2, max = 50, message = "La data deve essere compresa tra 2 e 50 caratteri!")
         String date,
         @NotEmpty(message = "Lo stato è obbligatorio! e deve essere SCHEDULED o COMPLETED ")
         @Size(min = 9, max = 9, message = "Lo stato deve essere precisamente di 9 caratteri!")

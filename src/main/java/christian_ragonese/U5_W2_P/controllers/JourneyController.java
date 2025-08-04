@@ -7,6 +7,7 @@ import christian_ragonese.U5_W2_P.payloads.NewJourneyDTO;
 import christian_ragonese.U5_W2_P.payloads.NewJourneyRespDTO;
 import christian_ragonese.U5_W2_P.services.JourneyService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -18,7 +19,9 @@ public class JourneyController {
     @Autowired
     private JourneyService journeyService;
 
-    @PostMapping
+
+    //---------------------------POST--------------------------
+    @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
     public NewJourneyRespDTO save(@RequestBody @Validated NewJourneyDTO payload, BindingResult validationResult) {
         if (validationResult.hasErrors()) {
@@ -29,6 +32,15 @@ public class JourneyController {
             Journey newJourney = this.journeyService.save(payload);
             return new NewJourneyRespDTO(newJourney.getId());
         }
+    }
+
+    //----------------------------GET--------------------------------
+    @GetMapping("") // GET http://localhost:1313/Journey
+    public Page<Journey> findAll(@RequestParam(defaultValue = "0") int page,
+                                 @RequestParam(defaultValue = "10") int size,
+                                 @RequestParam(defaultValue = "id") String sortBy
+    ) {
+        return this.journeyService.findAll(page, size, sortBy);
     }
 
 }
