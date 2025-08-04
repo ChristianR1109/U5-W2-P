@@ -22,4 +22,10 @@ public class Journey {
     private String destination;
     private String date;
     private String status;
+
+    public Journey(String destination, String date, String status) {
+        this.destination = destination;
+        this.date = date;
+        this.status = status;
+    }
 }
