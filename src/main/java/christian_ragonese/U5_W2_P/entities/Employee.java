@@ -25,4 +25,12 @@ public class Employee {
     private String surname;
     private String email;
     private String avatar;
+
+    public Employee(String username, String name, String surname, String email, String avatar) {
+        this.username = username;
+        this.name = name;
+        this.surname = surname;
+        this.email = email;
+        this.avatar = avatar;
+    }
 }
