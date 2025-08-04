@@ -1,8 +1,11 @@
 package christian_ragonese.U5_W2_P.services;
 
 import christian_ragonese.U5_W2_P.entities.Journey;
+import christian_ragonese.U5_W2_P.enums.JourneyStatus;
+import christian_ragonese.U5_W2_P.exceptions.BadRequestException;
 import christian_ragonese.U5_W2_P.exceptions.NotFoundException;
 import christian_ragonese.U5_W2_P.payloads.NewJourneyDTO;
+import christian_ragonese.U5_W2_P.payloads.NewStatusDTO;
 import christian_ragonese.U5_W2_P.repositories.JourneyRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,13 +27,13 @@ public class JourneyService {
     public Journey save(NewJourneyDTO payload) {
         String destination = payload.destination();
         String date = payload.date();
-        String status = payload.status();
+        JourneyStatus status = JourneyStatus.valueOf(payload.status());
 
         Journey newJourney = new Journey(destination, date, status);
-        Journey savedJouney = this.journeyRepository.save(newJourney);
+        Journey savedJourney = this.journeyRepository.save(newJourney);
 
-        log.info("Il viaggio con id : " + savedJouney.getId() + " è stato salvato correttamente!");
-        return savedJouney;
+        log.info("Il viaggio con id : " + savedJourney.getId() + " è stato salvato correttamente!");
+        return savedJourney;
     }
 
     //------------------------FIND ALL----------------------------------------
@@ -54,7 +57,7 @@ public class JourneyService {
 
         found.setDestination(payload.destination());
         found.setDate(payload.date());
-        found.setStatus(payload.status().toUpperCase());
+        found.setStatus(JourneyStatus.valueOf(payload.status().toUpperCase()));
 
         Journey modifiedJourney = this.journeyRepository.save(found);
 
@@ -69,4 +72,18 @@ public class JourneyService {
         this.journeyRepository.delete(found);
     }
 
+    //-------------------UPDATE STATUS----------------------------------------------
+    public Journey updateStatus(UUID journeyId, NewStatusDTO payload) {
+        Journey journey = this.findById(journeyId);
+        JourneyStatus newStatus;
+
+        try {
+            newStatus = JourneyStatus.valueOf(payload.status().toUpperCase());
+
+        } catch (IllegalArgumentException ex) {
+            throw new BadRequestException("Status non valido! --- " + payload.status() + " devi inserire SCHEDULED o COMPLETED");
+        }
+        journey.setStatus(newStatus);
+        return journeyRepository.save(journey);
+    }
 }

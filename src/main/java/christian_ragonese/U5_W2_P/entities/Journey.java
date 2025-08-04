@@ -1,9 +1,7 @@
 package christian_ragonese.U5_W2_P.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import christian_ragonese.U5_W2_P.enums.JourneyStatus;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,9 +19,10 @@ public class Journey {
     private UUID id;
     private String destination;
     private String date;
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private JourneyStatus status;
 
-    public Journey(String destination, String date, String status) {
+    public Journey(String destination, String date, JourneyStatus status) {
         this.destination = destination;
         this.date = date;
         this.status = status;

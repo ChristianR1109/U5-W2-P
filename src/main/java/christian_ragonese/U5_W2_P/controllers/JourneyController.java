@@ -5,6 +5,7 @@ import christian_ragonese.U5_W2_P.entities.Journey;
 import christian_ragonese.U5_W2_P.exceptions.ValidationException;
 import christian_ragonese.U5_W2_P.payloads.NewJourneyDTO;
 import christian_ragonese.U5_W2_P.payloads.NewJourneyRespDTO;
+import christian_ragonese.U5_W2_P.payloads.NewStatusDTO;
 import christian_ragonese.U5_W2_P.services.JourneyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -12,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/journeys")
@@ -43,4 +46,27 @@ public class JourneyController {
         return this.journeyService.findAll(page, size, sortBy);
     }
 
+    @GetMapping("/{journeyId}")
+    public Journey getJourneyById(@PathVariable UUID journeyId) {
+        return this.journeyService.findById(journeyId);
+    }
+
+    //------------------------PUT ----------------------------------------
+    @PutMapping("/{journeyId}")
+    public Journey getByIdAndUpdate(@PathVariable UUID journeyId, @RequestBody NewJourneyDTO payload) {
+        return this.journeyService.findByIdAndUpdate(journeyId, payload);
+    }
+
+    //-------------------------DELETE --------------------------------------
+    @DeleteMapping("/{journeyId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void getByIdAndDelete(@PathVariable UUID journeyId) {
+        this.journeyService.findByIdAndDelete(journeyId);
+    }
+    //-----------------------PATCH----------------------------------------
+
+    @PatchMapping("/{journeyId}/status")
+    public Journey updateStatus(@PathVariable UUID journeyId, @RequestBody @Validated NewStatusDTO payload) {
+        return this.journeyService.updateStatus(journeyId, payload);
+    }
 }
